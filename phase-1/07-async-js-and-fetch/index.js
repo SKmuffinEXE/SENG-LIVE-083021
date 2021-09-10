@@ -1,35 +1,10 @@
-const pokemons = [
-  {
-    id: 1,
-    name: "bulbasaur",
-    img: "https://static.wikia.nocookie.net/kingdom-keymasters-database/images/2/27/001Bulbasaur_XY_anime.png/revision/latest?cb=20160927122032",
-    likes: 4,
-  },
-  {
-    id: 2,
-    name: "ivysaur",
-    img: "https://static.wikia.nocookie.net/kingdom-keymasters-database/images/c/ca/002Ivysaur_XY_anime_2.png/revision/latest?cb=20161017212021",
-    likes: 21,
-  },
-  {
-    id: 3,
-    name: "venusaur",
-    img: "https://images.saymedia-content.com/.image/t_share/MTc2MjYwODQ5NTk2NTcyODYy/pokemon-venusaur-nicknames.png",
-    likes: 7,
-  },
-  {
-    id: 4,
-    name: "charmander",
-    img: "https://pixy.org/download/1207107/",
-    likes: 20,
-  },
-  {
-    id: 5,
-    name: "charmeleon",
-    img: "https://static.wikia.nocookie.net/pokemon-quest-adventures/images/a/a4/005Charmeleon_XY_anime_2.png/revision/latest?cb=20170313041459",
-    likes: 11,
-  },
-];
+//how to use fetch
+// fetch(endpoint, [options]***) //promises
+// .then() //do something with the promise
+// .then() //do something with the received data
+
+//fetch by default is going to make a get request
+//has 3 differetn statuses: pending, fulfilled, rejected
 
 const pokeContainer = document.getElementById("poke-container");
 const pokeForm = document.getElementById("poke-form");
@@ -91,11 +66,27 @@ function deletePoke(card) {
   card.remove();
 }
 
+function getPokemons(){
+//making a get request
+  fetch('http://localhost:3000/pokemons')//returns a promise
+  .then(function(resp){
+    return resp.json()
+  }) //return another rpomise)
+  .then(function(pokemonsArray){
+    //do something with pokemonsArray
+    //specifc to your application design
+    console.log(pokemonsArray)
+    pokemonsArray.forEach(function(pokemon){
+      renderPokemon(pokemon)
+    })
+  })
+}
+
 function init() {
-  pokemons.forEach(function (pokemon) {
-    renderPokemon(pokemon);
-  });
-  pokeForm.addEventListener("submit", createPokemon);
+
+  getPokemons()
+  pokeForm.addEventListener("submit", createPokemon)
+  
 }
 
 init();

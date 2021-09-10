@@ -31,8 +31,10 @@ const pokemons = [
   },
 ];
 
+let idValue = 1
 const pokeContainer = document.getElementById("poke-container");
 const pokeForm = document.getElementById("poke-form");
+
 
 function renderPokemon(pokemon) {
   const pokeCard = document.createElement("div");
@@ -56,15 +58,64 @@ function renderPokemon(pokemon) {
   const likeBttn = document.createElement("button");
   likeBttn.className = "like-bttn";
   likeBttn.textContent = "♥";
+  likeBttn.addEventListener("click", () => increaseLikes(pokemon, likesNum))
 
   const deleteBttn = document.createElement("button");
   deleteBttn.className = "delete-bttn";
   deleteBttn.textContent = "Delete";
+  deleteBttn.addEventListener("click",() => deletePokemon(pokeCard))
 
   pokeCard.append(pokeImg, pokeName, pokeLikes, likesNum, likeBttn, deleteBttn);
   pokeContainer.appendChild(pokeCard);
+  idValue++
 }
 
-pokemons.forEach(function (pokemon) {
-  renderPokemon(pokemon);
-});
+function createPokemon(event){
+  event.preventDefault()
+  // debugger;
+  
+//grab the values of name and image
+//create a new pokemon object with those values
+//Render the new character onto the DOM
+const name = event.target.querySelector(`#name-input`).value
+const img = event.target.querySelector(`#img-input`).value
+
+const pokemon = {
+  name: name,
+  img: img,
+  likes: 0,
+  id: idValue
+}
+
+renderPokemon(pokemon)
+
+pokeForm.reset()
+}
+
+function increaseLikes(pokemon, likesNum){
+  pokemon.likes++
+  // console.log(pokemon)
+  likesNum.textContent = pokemon.likes
+}
+
+function deletePokemon(pokemon){
+//removes the pokemon div and lowers the idvalue for when new pokemon are interested
+pokemon.remove()
+idValue--
+console.log(idValue)
+}
+
+function init() {
+  pokemons.forEach(function (pokemon) {
+    renderPokemon(pokemon);
+  });
+
+  pokeForm.addEventListener('submit',createPokemon)
+
+  //personal tests
+
+
+}
+
+init()
+
