@@ -29,7 +29,7 @@ function renderPokemon(pokemon) {
   const deleteBttn = document.createElement("button");
   deleteBttn.className = "delete-bttn";
   deleteBttn.textContent = "Delete";
-  deleteBttn.addEventListener("click", () => deletePoke(pokeCard));
+  deleteBttn.addEventListener("click", () => deletePoke(pokeCard, pokemon));
 
   pokeCard.append(pokeImg, pokeName, pokeLikes, likesNum, likeBttn, deleteBttn);
   pokeContainer.appendChild(pokeCard);
@@ -65,12 +65,33 @@ function createPokemon(event) {
 }
 
 function increaseLikes(pokemon, likesNum) {
+  // console.log(pokemon)
   ++pokemon.likes;
   likesNum.textContent = pokemon.likes;
+
+  console.log(pokemon.likes)
+
+  //add another layer that persists those updates
+  //create an endoing that includes the ID
+
+  //optimistically rendering
+  console.log(`${BASE_URL}/${pokemon.id}`)
+  fetch(`${BASE_URL}/${pokemon.id}`,{
+    method: 'PATCH',
+    headers: {
+      'Content-Type' : 'application/json'
+    },
+    body: JSON.stringify({likes: pokemon.likes})
+  })
 }
 
-function deletePoke(card) {
+function deletePoke(card, pokemon) {
   card.remove();
+
+  //optimistic
+  fetch(`${BASE_URL}/${pokemon.id}`, {
+    method: 'DELETE'
+  })
 }
 
 function getPokemons() {
@@ -92,9 +113,9 @@ function submitFunction(e) {
 function init() {
   getPokemons();
   pokeForm.addEventListener("submit", createPokemon);
-  const commentForm = document.querySelector("#comment-form");
-  console.log(commentForm);
-  commentForm.addEventListener("submit", submitFunction);
+  // const commentForm = document.querySelector("#comment-form");
+  // console.log(commentForm);
+  // commentForm.addEventListener("submit", submitFunction);
 }
 
 init();
